@@ -37,7 +37,6 @@ function CoreController($scope) {
     angular.forEach(dest, function (edge){
       if (edge === '$injector'  || edge === '$provide'  ) return;
       if (!providers[edge+"Provider"]){
-        console.log("aaaaaaaaaaaaaato", edge);
         return;
       }
       ret.push ({src: provider, dst: edge});
