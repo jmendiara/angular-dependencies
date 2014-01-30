@@ -2,9 +2,8 @@
 
 /* Directives */
 
-
 sigma.publicPrototype.myCircularLayout = function() {
-  var R = 0.4,
+  var R = 0.6,
       i = 0,
       L = this.getNodesCount();
 
@@ -35,6 +34,7 @@ angular.module('ngDeps.directives', []).
         var greyColor = '#666';
         sigInst.bind('overnodes',function(event){
           var nodes = event.content;
+          var target = event.content[0];
           var neighbors = {};
           sigInst.iterEdges(function(e){
             if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){
@@ -43,60 +43,39 @@ angular.module('ngDeps.directives', []).
                 e.color = greyColor;
                 e.attr['grey'] = 1;
               }
-            }else{
-              e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
-              e.attr['grey'] = 0;
-
-              neighbors[e.source] = 1;
-              neighbors[e.target] = 1;
             }
-          }).iterNodes(function(n){
-                if(!neighbors[n.id]){
-                  if(!n.attr['grey']){
-                    n.attr['true_color'] = n.color;
-                    n.color = greyColor;
-                    n.attr['grey'] = 1;
-                  }
-                }else{
-                  n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
-                  n.attr['grey'] = 0;
-                }
-              }).draw(2,2,2);
-        }).bind('outnodes',function(){
-              sigInst.iterEdges(function(e){
-                e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
-                e.attr['grey'] = 0;
-              }).iterNodes(function(n){
-                    n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
-                    n.attr['grey'] = 0;
-                  }).draw(2,2,2);
-            });
 
-        sigInst.bind('overnodes',function(event){
-          var nodes = event.content;
-          var target = event.content[0];
-          var neighbors = {};
-          sigInst.iterEdges(function(e){
             if(nodes.indexOf(e.source)>=0 || nodes.indexOf(e.target)>=0){
               neighbors[e.source] = 1;
               neighbors[e.target] = 1;
             }
           }).iterNodes(function(n){
             if(!neighbors[n.id]){
+                  if(!n.attr['grey']){
+                    n.attr['true_color'] = n.color;
+                    n.color = greyColor;
+                    n.attr['grey'] = 1;
+                  }
               n.hidden = 1;
             }else {
+                  n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+                  n.attr['grey'] = 0;
+
               n.hidden = 0;
             }
             if (n.id === target){
               n.hidden = 0;
             }
           });
-          event.target    .get
           sigInst.draw(2,2,2);
         }).bind('outnodes',function(){
           sigInst.iterEdges(function(e){
+                e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
+                e.attr['grey'] = 0;
             e.hidden = 0;
           }).iterNodes(function(n){
+                    n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+                    n.attr['grey'] = 0;
             n.hidden = 0;
           }).draw(2,2,2);
         });
@@ -105,6 +84,7 @@ angular.module('ngDeps.directives', []).
         sigInst.drawingProperties({
           defaultLabelColor: '#ccc',
           font: 'Arial',
+          fontSize: '16px',
           edgeColor: 'source',
           defaultEdgeType: 'curve'
         }).graphProperties({
@@ -112,7 +92,6 @@ angular.module('ngDeps.directives', []).
               maxNodeSize: 10
         });
 
-        //console.log(scope);
         angular.forEach(scope.nodes, function (node){
           sigInst.addNode(node,{
             label: node,
@@ -127,9 +106,7 @@ angular.module('ngDeps.directives', []).
           sigInst.addEdge(id++, edge.src, edge.dst);
         });
 
-        sigInst.draw();
         sigInst.myCircularLayout();
-        //console.log(scope);
       };
     })
 ;
