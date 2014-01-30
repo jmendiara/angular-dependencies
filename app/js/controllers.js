@@ -26,7 +26,6 @@ function CoreController($scope) {
     if (!provider.$get) return;
     var injected = injector.annotate(provider.$get);
     $scope.edges = $scope.edges.concat(createEdges(i, injected));
-
   });
 
 
@@ -45,11 +44,6 @@ function CoreController($scope) {
 
     return ret;
   }
-
-
-
-
-
 }
-CoreController.$inject = ['$scope'];
 
+CoreController.$inject = ['$scope'];
